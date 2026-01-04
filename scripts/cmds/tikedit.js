@@ -58,16 +58,16 @@ module.exports = {
         if (stats.size > 26214400) {
         if (fs.existsSync(videoPath)) fs.unlinkSync(videoPath);
         api.setMessageReaction("❌", event.messageID, () => {}, true);
-        return message.reply("⚠️ Video too large (25MB+). Try another keyword.");
+        return message.reply("Video too large (25MB+). Try another keyword.");
       }
 
        await message.reply({ body: `•𝐇𝐞𝐫𝐞'𝐬 𝐲𝐨𝐮𝐫 𝐓𝐢𝐤𝐓𝐨𝐤 𝐄𝐝𝐢𝐭 𝐕𝐢𝐝𝐞𝐨.\n•𝐒𝐞𝐚𝐫𝐜𝐡: ${keyword}`,
        attachment: fs.createReadStream(videoPath)  });
-       api.setMessageReaction("✅", event.messageID, () => {}, true);
+       api.setMessageReaction("🪽", event.messageID, () => {}, true);
 
      } catch (err) {
        console.error("tiksr cmd error:", err);
-       api.setMessageReaction("⚠️", event.messageID, () => {}, true);
+       api.setMessageReaction("❌", event.messageID, () => {}, true);
        message.reply("🥹error, contact MahMUD.");
      } finally {
        if (fs.existsSync(videoPath)) {

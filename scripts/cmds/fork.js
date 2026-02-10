@@ -5,7 +5,7 @@ module.exports = {
     author: "MahMUD",
     countDown: 0,
     role: 0,
-    category: "Bot make",
+    category: "github",
     guide: {
       en: "{pn} - Get the GitHub fork link and tutorial video."
     }

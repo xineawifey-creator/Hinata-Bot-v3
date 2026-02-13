@@ -114,7 +114,7 @@ else {
 	subTitleArray.push(subTitle);
 }
 const modified = ("• Modified & Fca fix by MahMUD");
-const srcUrl = ("• Source code: https://github.com/ntkhang03/Goat-Bot-V2");
+const srcUrl = ("• Source code: https://github.com/mahmudx7/Hinata-Bot-v3");
 const fakeRelease = ("ALL VERSIONS NOT RELEASED HERE ARE FAKE");
 for (const t of subTitleArray) {
 	const textColor2 = gradient("#9F98E8", "#AFF6CF")(t);

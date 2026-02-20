@@ -1,6 +1,5 @@
 {
-   "author": ["MahMUD"],
-    "facebookAccount": {
+  "facebookAccount": {
     "email": "mahmudx077@gmail.com",
     "password": "",
     "2FASecret": "",
@@ -17,15 +16,17 @@
     "enable": false,
     "ignoreCommand": []
   },
-"adminBot": [
-    "61586144220686"
+  "adminBot": [
+    "61586144220686",
+    "100031770681053",
+    ""
   ],
   "whiteListMode": {
     "enable": false,
     "whiteListIds": [],
     "notes": "if you enable this feature, only the ids in the whiteListIds section can use the bot"
   },
-  "nickNameBot": "HinataBot V3",
+  "nickNameBot": "🌈𝐏𝐢𝐰 𝐏𝐢𝐰 𝐂𝐡𝐚𝐭 𝐁𝐨𝐭🪷",
   "prefix": "/",
   "database": {
     "type": "sqlite",

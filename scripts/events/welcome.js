@@ -18,23 +18,15 @@ module.exports = {
 			session4: "evening",
 			multiple1: "you",
 			multiple2: "you guys",
-			defaultWelcomeMessage: `╔══✦❘༻༺❘✦══╗
-🥀 ASSALAMUALAIKUM 🥀
-╚══✦❘༻༺❘✦══╝
+			defaultWelcomeMessage: `🥰 𝐀𝐬𝐬𝐚𝐥𝐚𝐦𝐮𝐥𝐚𝐢𝐤𝐮𝐦 🥰
 
-🎀 Hello » {userName}
+🎀 {userName}
 
-🌸 Welcome {multiple} to
-『 {boxName} 』
+Welcome {multiple} to
+[ {boxName} ] Group
 
-🕰️ Have a nice {session}
-📌 Please Follow Group Rules
-
-━━━━━━━━━━━━━━━
-✨ Be Active
-🚫 No Spam
-💬 Respect All
-━━━━━━━━━━━━━━━`
+Have a nice {session} 😊
+⚠ Follow all rules ♻`
 		}
 	},
 
@@ -44,15 +36,28 @@ module.exports = {
 
 				const hours = getTime("HH");
 				const { threadID } = event;
-				const adminName = "Mehedi Hasan";
+				const { nickNameBot } = global.GoatBot.config;
+				const prefix = global.utils.getPrefix(threadID);
+				const dataAddedParticipants = event.logMessageData.addedParticipants;
+
+				if (dataAddedParticipants.some((item) => item.userFbId == api.getCurrentUserID())) {
+					if (nickNameBot)
+						api.changeNickname(nickNameBot, threadID, api.getCurrentUserID());
+					return message.send(getLang("welcomeMessage", prefix));
+				}
 
 				let addedByName = "Unknown";
+				let addedByID = event.author;
+				let addedByMention = [];
+
 				try {
 					const userInfo = await api.getUserInfo(event.author);
 					addedByName = userInfo[event.author].name;
+					addedByMention.push({
+						tag: addedByName,
+						id: addedByID
+					});
 				} catch (e) {}
-
-				const dataAddedParticipants = event.logMessageData.addedParticipants;
 
 				if (!global.temp.welcomeEvent[threadID])
 					global.temp.welcomeEvent[threadID] = {
@@ -74,8 +79,8 @@ module.exports = {
 
 					const dataAddedParticipants = global.temp.welcomeEvent[threadID].dataAddedParticipants;
 					const userName = [],
-					userIDs = [],
-					mentions = [];
+					mentions = [],
+					userIDs = [];
 
 					let multiple = false;
 					if (dataAddedParticipants.length > 1)
@@ -96,7 +101,7 @@ module.exports = {
 						threadData.data;
 
 					const form = {
-						mentions: mentions
+						mentions: mentions.concat(addedByMention)
 					};
 
 					welcomeMessage = welcomeMessage
@@ -119,15 +124,16 @@ module.exports = {
 
 					form.body = welcomeMessage + `
 
+━━━━━━━━━━━━━━━
 👤 UID: ${userIDs.join(", ")}
 👥 Joined: ${userIDs.length}
 👨‍👩‍👧‍👦 Total Member: ${totalMem}
 
 ➤ Added By: ${addedByName}
 
-╭───❍ ADMIN ❍───╮
-   ${adminName}
-╰────────────╯`;
+                       ᴀᴅᴍɪɴ
+                 ─ Mehedi Hasan
+━━━━━━━━━━━━━━━`;
 
 					message.send(form);
 					delete global.temp.welcomeEvent[threadID];

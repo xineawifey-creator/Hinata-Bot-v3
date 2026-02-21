@@ -1,9 +1,9 @@
 const axios = require("axios");
-const { getStreamFromURL, shortenURL } = global.utils;
+const { getStreamFromURL } = global.utils;
 
 async function fetchTikTokVideos(query) {
   try {
-    const res = await axios.get(`https://tikwm.com/api/feed/search`, {
+    const res = await axios.get("https://tikwm.com/api/feed/search", {
       params: {
         keywords: query,
         count: 20,
@@ -12,10 +12,10 @@ async function fetchTikTokVideos(query) {
       }
     });
 
-    return res.data.data.videos;
+    return res.data?.data?.videos || [];
   } catch (e) {
-    console.log(e);
-    return null;
+    console.log("Search Error:", e);
+    return [];
   }
 }
 
@@ -24,7 +24,7 @@ module.exports = {
     name: "lyricvideo",
     aliases: ["lv"],
     author: "Nazim Fixed",
-    version: "2.0",
+    version: "3.0",
     shortDescription: {
       en: "Play latest lyric video",
     },
@@ -41,41 +41,47 @@ module.exports = {
     api.setMessageReaction("✨", event.messageID, () => {}, true);
 
     try {
-      let query = '';
+      let query = "";
 
-      if (event.messageReply && event.messageReply.attachments?.length > 0) {
-        const shortUrl = event.messageReply.attachments[0].url;
-
-        const reco = await axios.get(`https://audio-reco.onrender.com/kshitiz?url=${encodeURIComponent(shortUrl)}`);
-        query = reco.data.title;
-      } 
-      else if (args.length > 0) {
+      if (args.length > 0) {
         query = args.join(" ");
-      } 
-      else {
-        return api.sendMessage("❌ Song name dao or audio/video reply koro", event.threadID, event.messageID);
+      } else {
+        return api.sendMessage("❌ Song name dao", event.threadID, event.messageID);
       }
 
       query += " lyrics edit";
 
       const videos = await fetchTikTokVideos(query);
 
-      if (!videos || videos.length === 0) {
+      if (!videos.length) {
         return api.sendMessage("❌ Latest lyric video pawa jai nai!", event.threadID, event.messageID);
       }
 
-      const random = videos[Math.floor(Math.random() * videos.length)];
-      const videoUrl = random.play;
+      let videoUrl = null;
+
+      for (let vid of videos) {
+        videoUrl =
+          vid.play ||
+          vid.wmplay ||
+          vid.hdplay ||
+          vid?.play_addr?.url_list?.[0];
+
+        if (videoUrl) break;
+      }
+
+      if (!videoUrl) {
+        return api.sendMessage("❌ Video URL pawa jai nai!", event.threadID, event.messageID);
+      }
 
       const stream = await getStreamFromURL(videoUrl);
 
-      api.sendMessage({
+      return api.sendMessage({
         body: `🎧 ${query}`,
         attachment: stream
       }, event.threadID, event.messageID);
 
     } catch (err) {
-      console.log(err);
+      console.log("Main Error:", err);
       api.sendMessage("⚠️ Error hoise, abar try kor", event.threadID, event.messageID);
     }
   }
